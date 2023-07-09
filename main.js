@@ -1,7 +1,7 @@
 // ESM syntax is supported.
 export {};
 
-//import fs from "fs";
+import * as fs from 'node:fs';
 /*
 let form = document.getElementById("welcomeFormular");
 form.addEventListener("submit", formularAbsenden);
@@ -9,25 +9,93 @@ form.addEventListener("submit", formularAbsenden);
 function formularAbsenden(event) {
   event.preventDefault(); 
 console.log("Hi Team")
-}
-
-let form = document.getElementById("registrationFormular");
-form.addEventListener("submit", formularAbsenden);
-
-function formularAbsenden(event) {
-  event.preventDefault(); 
-console.log("Hi Team")
 }*/
-/*
+
 class UserData {
-  constructor(username, password, email) {
-    this.username = username;
-    this.password = password;
+  constructor(firstname, lastName, email,password ) {
+    this.firstname = firstname;
+    this.lastName = lastName;
     this.email = email;
+    this.password = password;
   }
 }
 
-function addUser(userData) {
+let form = document.getElementById("registrationFormular");
+form.addEventListener("submit", formularCreateAccount);
+
+
+export function formularCreateAccount(event) {
+  console.log("hii")
+  event.preventDefault(); // Verhindert das Standardverhalten des Absendens
+
+  let firstName = document.getElementById("FirstName").value;
+  let lastName = document.getElementById("LastName").value;
+  let eingabeEmail = document.getElementById("NewEmail").value;
+  let eingabePassword = document.getElementById("NewPassword").value;
+  let eingabePassword2 = document.getElementById("NewPassword2").value;
+
+// Funktion zur Überprüfung der Email-Adresse mit einem einfachen regulären Ausdruck
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+let regName = /\d+$/g;	
+
+if (firstName == "" || regName.test(firstName)) {
+  window.alert("Please enter your first name properly.");
+  return false;
+}
+
+if (lastName == "" || regName.test(lastName)) {
+  window.alert("Please enter your last name properly.");
+  return false;
+}
+
+  // Eingabevalidierung
+  if (!eingabeEmail || eingabeEmail.trim() === "") {
+    alert("Bitte geben Sie eine Email-Adresse ein.");
+    return;
+  }
+
+  if (!validateEmail(eingabeEmail)) {
+    alert("Bitte geben Sie eine gültige Email-Adresse ein.");
+    return;
+  }
+
+  if (
+    !eingabePassword ||
+    eingabePassword.trim() === "" ||
+    eingabePassword.length < 8 ||
+    eingabePassword != eingabePassword2
+  ) {
+    alert(
+      "Bitte geben Sie ein Passwort ein. Das Passwort muss mindestens 8 Zeichen lang sein."
+    );
+    return;
+  }
+
+console.log("Eingegebener Vorname: " + firstName);
+console.log("Eingegebener Nachname: " + lastName);
+console.log("Eingegebene Email: " + eingabeEmail);
+console.log("Eingegebenes Passwort: " + eingabePassword);
+
+// Create a new instance of UserData with the entered data
+const newUser = new UserData(firstName,lastName,eingabeEmail,eingabePassword);
+
+// Add the new user to the system
+//addUser(newUser);
+
+// Reset the form
+//event.target.reset();
+
+// Display a success message or perform any other desired actions
+console.log("New user created:", newUser);
+
+}
+
+
+
+function addUser(UserData) {
   // Check if the file exists before reading
   if (!fs.existsSync("userdata.json")) {
     console.error("userdata.json does not exist.");
@@ -48,7 +116,7 @@ function addUser(userData) {
   // Check for duplicate registrations
   const isDuplicate = existingData.some(
     (user) =>
-      user.username === userData.username || user.email === userData.email
+      user.firstname === userData.firstname || user.email === userData.email || user.lastName === userData.lastName
   );
 
   if (isDuplicate) {
@@ -70,36 +138,6 @@ function addUser(userData) {
 
 
 /*
-function formularAbsenden(event) {
-  event.preventDefault(); // Prevents the default form submission behavior
-
-  // Get the values of email and password input fields
-  let eingabeEmail = document.getElementById("InputEmail").value;
-  let eingabePassword = document.getElementById("InputPassword").value;
-  console.log(eingabeEmail+ " " +eingabePassword) 
-
-  // Input validation
-  if (!eingabeEmail || eingabeEmail.trim() === "") {
-    alert("Bitte geben Sie eine Email-Adresse ein.");
-    return;
-  }
-
-  if (!validateEmail(eingabeEmail)) {
-    alert("Bitte geben Sie eine gültige Email-Adresse ein.");
-    return;
-  }
-
-  if (
-    !eingabePassword ||
-    eingabePassword.trim() === "" ||
-    eingabePassword.length < 8
-  ) {
-    alert(
-      "Bitte geben Sie ein Passwort ein. Das Passwort muss mindestens 8 Zeichen lang sein."
-    );
-    return;
-  }
-
   // Create a new instance of UserData with the entered data
   const newUser = new UserData("", eingabePassword, eingabeEmail);
 
@@ -175,42 +213,5 @@ function validateEmail(email) {
 */
 //---------------------------------Formular Create an Account!-----------------
 
-export function formularCreateAccount(event) {
-  event.preventDefault(); // Verhindert das Standardverhalten des Absendens
 
-  let firstName = document.getElementById("Firstname").value;
-  let lastName = document.getElementById("Lastname").value;
-  let eingabeEmail = document.getElementById("NewEmail").value;
-  let eingabePassword = document.getElementById("NewPassword").value;
-  let eingabePassword2 = document.getElementById("NewPassword2").value;
-
-
-
-  // Eingabevalidierung
-  if (!eingabeEmail || eingabeEmail.trim() === "") {
-    alert("Bitte geben Sie eine Email-Adresse ein.");
-    return;
-  }
-
-  if (!validateEmail(eingabeEmail)) {
-    alert("Bitte geben Sie eine gültige Email-Adresse ein.");
-    return;
-  }
-
-  if (
-    !eingabePassword ||
-    eingabePassword.trim() === "" ||
-    eingabePassword.length < 8 ||
-    eingabePassword != eingabePassword2
-  ) {
-    alert(
-      "Bitte geben Sie ein Passwort ein. Das Passwort muss mindestens 8 Zeichen lang sein."
-    );
-    return;
-  }
-}
 // Hier kannst du den eingegebenen Inhalt weiterverarbeiten, z. B. an das Backend senden
-console.log("Eingegebener Vorname: " + firstName);
-console.log("Eingegebener Nachname: " + lastName);
-console.log("Eingegebene Email: " + eingabeEmail);
-console.log("Eingegebenes Passwort: " + eingabePassword);
